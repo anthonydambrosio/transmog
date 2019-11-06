@@ -29,3 +29,13 @@ func TestGetk2(t *testing.T) {
 		t.Errorf("Key k2 is not '2'")
 	}
 }
+
+func TestSetk1(t *testing.T) {
+	var tm Transmog
+	_ = tm.Load("test.json")
+	_ = tm.Set([]string{"k1"}, "Kay 1")
+	v, _ := tm.Get([]string{"k1"})
+	if v != "Kay 1" {
+		t.Errorf("Key k2 is not 'Kay 1'")
+	}
+}
