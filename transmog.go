@@ -58,6 +58,16 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 				*value = strconv.FormatFloat(node[path[0]].(float64), 'f', -1, 64)
 			}
 			return nil
+		case bool:
+			if write {
+				b, err := strconv.ParseBool(*value)
+				if err != nil {
+					return fmt.Errorf("Value type is not a bool (%s): %v", *value, err.Error())
+				}
+				node[path[0]] = b
+			} else {
+				*value = strconv.FormatBool(node[path[0]].(bool))
+			}
 		default:
 			valueType := strings.Replace(reflect.ValueOf(node[path[0]]).Kind().String(), "map", "object", -1)
 			valueType = strings.Replace(valueType, "slice", "array", -1)

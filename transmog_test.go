@@ -1,6 +1,7 @@
 package transmog
 
 import (
+	"strconv"
 	"testing"
 )
 
@@ -37,5 +38,15 @@ func TestSetk1(t *testing.T) {
 	v, _ := tm.Get([]string{"k1"})
 	if v != "Kay 1" {
 		t.Errorf("Key k2 is not 'Kay 1'")
+	}
+}
+
+func TestGetk8(t *testing.T) {
+	var tm Transmog
+	_ = tm.Load("test.json")
+	v, _ := tm.Get([]string{"k8"})
+	b, err := strconv.ParseBool(v)
+	if !b {
+		t.Errorf("Key k8 is not true: %v", err )
 	}
 }
