@@ -68,6 +68,7 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 			} else {
 				*value = strconv.FormatBool(node[path[0]].(bool))
 			}
+			return nil
 		default:
 			valueType := strings.Replace(reflect.ValueOf(node[path[0]]).Kind().String(), "map", "object", -1)
 			valueType = strings.Replace(valueType, "slice", "array", -1)
@@ -117,9 +118,11 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 			}
 		case nil:
 			return fmt.Errorf("nil:unknown value type %v", reflect.ValueOf(node[path[0]]).Kind())
+		default:
+			return fmt.Errorf("unexpected error traversing")
 		}
 	}
-	return errors.New("path not found")
+	return fmt.Errorf("unexpected error")
 }
 
 // Load a JSON or YAML file.

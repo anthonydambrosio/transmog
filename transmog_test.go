@@ -31,11 +31,18 @@ func TestSetk1(t *testing.T) {
 	}
 }
 
-func TestGetk8(t *testing.T) {
+func TestGetBool(t *testing.T) {
 	v, _ := tm.Get([]string{"k8"})
 	b, err := strconv.ParseBool(v)
 	if !b {
 		t.Errorf("Key k8 is not true: %v", err)
+	}
+}
+
+func TestSetBool(t *testing.T) {
+	err := tm.Set([]string{"k8"}, "false")
+	if err != nil {
+		t.Error(err)
 	}
 }
 
