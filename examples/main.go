@@ -5,8 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	// "github.com/anthonydambrosio/transmog"
-	"transmog"
+	"github.com/anthonydambrosio/transmog"
 )
 
 func main() {
