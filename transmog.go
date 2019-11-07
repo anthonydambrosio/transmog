@@ -20,12 +20,10 @@ type Transmog struct {
 }
 
 func (c *Transmog) parse(data []byte) error {
-	// var buffer interface{}
 	err := yaml.Unmarshal(data, &c.data)
 	if err != nil {
 		return err
 	}
-	// c.data = buffer
 	return nil
 }
 
