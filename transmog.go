@@ -21,20 +21,20 @@ type Transmog struct {
 	data interface{}
 }
 
-func (c *Transmog) parse(data []byte) error {
-	err := yaml.Unmarshal(data, &c.data)
+func (t *Transmog) parse(data []byte) error {
+	err := yaml.Unmarshal(data, &t.data)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (c *Transmog) parseXML(data []byte) error {
+func (t *Transmog) parseXML(data []byte) error {
 	xmldata, err := mxj.NewMapXml(data)
 	if err != nil {
 		return err
 	}
-	c.data = xmldata
+	t.data = xmldata
 	return nil
 }
 
@@ -134,25 +134,25 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 }
 
 // Load a JSON or YAML file.
-func (c *Transmog) Load(path string) error {
+func (t *Transmog) Load(path string) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err
 	}
 	if filepath.Ext(path) == ".xml" {
-		return c.parseXML(data)
+		return t.parseXML(data)
 	}
-	return c.parse(data)
+	return t.parse(data)
 }
 
 // ToYaml transmogrify data to YAML.
-func (c *Transmog) ToYaml() ([]byte, error) {
-	return yaml.Marshal(c.data)
+func (t *Transmog) ToYaml() ([]byte, error) {
+	return yaml.Marshal(t.data)
 }
 
 // ToJSON transmogrify data to JSON.
-func (c *Transmog) ToJSON() ([]byte, error) {
-	return json.MarshalIndent(c.data, "", "  ")
+func (t *Transmog) ToJSON() ([]byte, error) {
+	return json.MarshalIndent(t.data, "", "  ")
 }
 
 // ToXML transmogrify data to XML.
@@ -173,14 +173,14 @@ func (t *Transmog) ToXML(indent string) ([]byte, error) {
 }
 
 // Get value from data give path string.
-func (c *Transmog) Get(path []string) (string, error) {
+func (t *Transmog) Get(path []string) (string, error) {
 	value := ""
-	err := traverse(c.data, path, &value, false)
+	err := traverse(t.data, path, &value, false)
 	return value, err
 }
 
 // Set value in data found at path string.
-func (c *Transmog) Set(path []string, value string) error {
-	err := traverse(c.data, path, &value, true)
+func (t *Transmog) Set(path []string, value string) error {
+	err := traverse(t.data, path, &value, true)
 	return err
 }

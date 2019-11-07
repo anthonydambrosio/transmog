@@ -1,6 +1,16 @@
-<?xml version = "1.0"?>
-<contact-info>
-   <name>Tanmay Patil</name>
-   <company>TutorialsPoint</company>
-   <phone>(011) 123-4567</phone>
-</contact-info>
+<?xml version = "1.0" encoding = "UTF-8" standalone = "yes" ?>
+<!DOCTYPE address
+[
+   <!ELEMENT address (name,company,phone)>
+   <!ELEMENT name (#PCDATA)>
+   <!ELEMENT company (#PCDATA)>
+   <!ELEMENT phone (#PCDATA)>
+]>
+
+<address>
+<cont:contact xmlns:cont = "www.tutorialspoint.com/profile">
+   <cont:name>Tanmay Patil</cont:name>
+   <cont:company>TutorialsPoint</cont:company>
+   <cont:phone>(011) 123-4567</cont:phone>
+</cont:contact>
+</address>
