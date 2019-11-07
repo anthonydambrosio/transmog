@@ -7,10 +7,12 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"reflect"
 	"strconv"
 	"strings"
 
+	"github.com/clbanning/mxj"
 	"github.com/ghodss/yaml"
 )
 
@@ -24,6 +26,15 @@ func (c *Transmog) parse(data []byte) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (c *Transmog) parseXML(data []byte) error {
+	xmldata, err := mxj.NewMapXml(data)
+	if err != nil {
+		return err
+	}
+	c.data = xmldata
 	return nil
 }
 
@@ -120,7 +131,6 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 			return fmt.Errorf("unexpected error traversing")
 		}
 	}
-	return fmt.Errorf("unexpected error")
 }
 
 // Load a JSON or YAML file.
@@ -128,6 +138,9 @@ func (c *Transmog) Load(path string) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err
+	}
+	if filepath.Ext(path) == ".xml" {
+		return c.parseXML(data)
 	}
 	return c.parse(data)
 }
@@ -140,6 +153,23 @@ func (c *Transmog) ToYaml() ([]byte, error) {
 // ToJSON transmogrify data to JSON.
 func (c *Transmog) ToJSON() ([]byte, error) {
 	return json.MarshalIndent(c.data, "", "  ")
+}
+
+// ToXML transmogrify data to XML.
+func (t *Transmog) ToXML(indent string) ([]byte, error) {
+	j, err := json.Marshal(t.data)
+	if err != nil {
+		return []byte{}, err
+	}
+	mv, err := mxj.NewMapJson(j)
+	if err != nil {
+		return []byte{}, err
+	}
+	xml, err := mv.XmlIndent("", indent)
+	if err != nil {
+		return []byte{}, err
+	}
+	return xml, nil
 }
 
 // Get value from data give path string.
