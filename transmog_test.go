@@ -64,7 +64,7 @@ func TestSetXml(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = tmog.Set([]string{"address contact name"}, "John Smith")
+	err = tmog.Set([]string{"address", "contact", "name"}, "John Smith")
 	if err != nil {
 		t.Error(err)
 	}
