@@ -46,6 +46,30 @@ func TestSetBool(t *testing.T) {
 	}
 }
 
+func TestGetXml(t *testing.T) {
+	var tmog Transmog
+	err := tmog.Load("test.xml")
+	if err != nil {
+		t.Error(err)
+	}
+	value, _ := tmog.Get([]string{"address", "contact", "name"})
+	if value != "Tanmay Patil" {
+		t.Errorf("name in text.xml is not 'Tanmay Patil', is %v", value)
+	}
+}
+
+func TestSetXml(t *testing.T) {
+	var tmog Transmog
+	err := tmog.Load("test.xml")
+	if err != nil {
+		t.Error(err)
+	}
+	err = tmog.Set([]string{"address contact name"}, "John Smith")
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestMain(m *testing.M) {
 	err := tm.Load("test.json")
 	if err != nil {

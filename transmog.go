@@ -34,8 +34,11 @@ func (t *Transmog) parseXML(data []byte) error {
 	if err != nil {
 		return err
 	}
-	t.data = xmldata
-	return nil
+	j, err := json.Marshal(xmldata)
+	if err != nil {
+		return err
+	}
+	return t.parse(j)
 }
 
 func traverse(data interface{}, path []string, value *string, write bool) error {
