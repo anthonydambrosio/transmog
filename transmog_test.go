@@ -48,7 +48,7 @@ func TestSetBool(t *testing.T) {
 
 func TestGetXml(t *testing.T) {
 	var tmog Transmog
-	err := tmog.Load("test.xml")
+	err := tmog.LoadFile("test.xml")
 	if err != nil {
 		t.Error(err)
 	}
@@ -60,7 +60,7 @@ func TestGetXml(t *testing.T) {
 
 func TestSetXml(t *testing.T) {
 	var tmog Transmog
-	err := tmog.Load("test.xml")
+	err := tmog.LoadFile("test.xml")
 	if err != nil {
 		t.Error(err)
 	}
@@ -71,7 +71,7 @@ func TestSetXml(t *testing.T) {
 }
 
 func TestMain(m *testing.M) {
-	err := tm.Load("test.json")
+	err := tm.LoadFile("test.json")
 	if err != nil {
 		fmt.Print(fmt.Errorf("%v", err.Error()))
 		os.Exit(1)

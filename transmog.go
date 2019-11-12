@@ -1,7 +1,5 @@
 package transmog
 
-// TODO: Not thread safe.
-
 import (
 	"encoding/json"
 	"errors"
@@ -16,12 +14,13 @@ import (
 	"github.com/ghodss/yaml"
 )
 
-// Transmog an instance of data that can be transmogrified.
+// Transmog represents an instance of data that can be transmogrified.
 type Transmog struct {
 	data interface{}
 }
 
-func (t *Transmog) parse(data []byte) error {
+// Parse a JSON or YAML slice.
+func (t *Transmog) Parse(data []byte) error {
 	err := yaml.Unmarshal(data, &t.data)
 	if err != nil {
 		return err
@@ -29,7 +28,8 @@ func (t *Transmog) parse(data []byte) error {
 	return nil
 }
 
-func (t *Transmog) parseXML(data []byte) error {
+// ParseXML will parse an XML slice.
+func (t *Transmog) ParseXML(data []byte) error {
 	xmldata, err := mxj.NewMapXml(data)
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (t *Transmog) parseXML(data []byte) error {
 	if err != nil {
 		return err
 	}
-	return t.parse(j)
+	return t.Parse(j)
 }
 
 func traverse(data interface{}, path []string, value *string, write bool) error {
@@ -126,7 +126,7 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 			case map[string]interface{}:
 				return traverse(tarray[index], path[2:], value, write)
 			default:
-				return nil // Should be some sort of error.
+				return fmt.Errorf("nil:unknown value type %v", reflect.ValueOf(tarray[index]).Kind())
 			}
 		case nil:
 			return fmt.Errorf("nil:unknown value type %v", reflect.ValueOf(node[path[0]]).Kind())
@@ -136,16 +136,16 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 	}
 }
 
-// Load a JSON or YAML file.
-func (t *Transmog) Load(path string) error {
+// LoadFile a JSON or YAML file.
+func (t *Transmog) LoadFile(path string) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return err
 	}
 	if filepath.Ext(path) == ".xml" {
-		return t.parseXML(data)
+		return t.ParseXML(data)
 	}
-	return t.parse(data)
+	return t.Parse(data)
 }
 
 // ToYaml transmogrify data to YAML.

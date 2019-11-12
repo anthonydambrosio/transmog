@@ -21,7 +21,7 @@ func main() {
 
 	var err error
 	var data []byte
-	transmogrifier.Load(*file)
+	transmogrifier.LoadFile(*file)
 	if *asYAML {
 		data, err = transmogrifier.ToYaml()
 	} else {
