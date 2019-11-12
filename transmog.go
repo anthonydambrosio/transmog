@@ -1,3 +1,6 @@
+// Transmog is a small package that can read, write and transmogrify JSON, YAML and XML.
+// Transmog uses a much simpler version of JSONPATH to specify object properties.
+
 package transmog
 
 import (
@@ -41,6 +44,7 @@ func (t *Transmog) ParseXML(data []byte) error {
 	return t.Parse(j)
 }
 
+// Traverse the in memory object to the path.  If write is true update the node with value.
 func traverse(data interface{}, path []string, value *string, write bool) error {
 	// No path, don't know what property we are working with.
 	if len(path) < 1 {
@@ -136,7 +140,7 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 	}
 }
 
-// LoadFile a JSON or YAML file.
+// LoadFile a JSON, YAML or XML file.
 func (t *Transmog) LoadFile(path string) error {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {

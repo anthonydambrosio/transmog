@@ -7,7 +7,3 @@ Uses <https://github.com/clbanning/mxj> to marshal and unmarshal XML into memory
 Load some data, update it and write it out in whatever format needed.
 
 _'it took me all morning'_
-
-
-
-
