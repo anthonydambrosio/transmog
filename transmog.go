@@ -45,7 +45,20 @@ func (t *Transmog) ParseXML(data []byte) error {
 }
 
 func addProperty(node map[string]interface{}, property string, value string) error {
-	node[property] = value
+	var tempValue interface{}
+	var err error
+	tempValue = value
+	if value == "true" || value == "false" {
+		tempValue, err = strconv.ParseBool(value)
+		if err != nil {
+			return err
+		}
+	}
+	f, err := strconv.ParseFloat(value, 64)
+	if err == nil {
+		tempValue = f
+	}
+	node[property] = tempValue
 	return nil
 }
 
@@ -97,9 +110,7 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 				return fmt.Errorf("value is %s", valueType)
 			}
 		} else {
-			// node[path[0]] = *value
-			addProperty(node, path[0], *value)
-			return nil
+			return addProperty(node, path[0], *value)
 		}
 	} else {
 		// Traverse

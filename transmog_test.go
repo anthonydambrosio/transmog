@@ -46,11 +46,22 @@ func TestSetBool(t *testing.T) {
 	}
 }
 
-func TestAddProperty(t *testing.T) {
+func TestAddStringProperty(t *testing.T) {
 	tm.Set([]string{"k9"}, "Lassie")
 	v, _ := tm.Get([]string{"k9"})
 	if v != "Lassie" {
 		t.Error("k9 is not Lassie")
+	}
+}
+
+func TestAddFloatProperty(t *testing.T) {
+	tm.Set([]string{"k9"}, "3.14")
+	v, _ := tm.Get([]string{"k9"})
+	if v != "3.14" {
+		t.Error("Value is not 3.14")
+	}
+	if f, _ := strconv.ParseFloat(v, 64); f != 3.14 {
+		t.Error("Float is not float")
 	}
 }
 
