@@ -44,6 +44,11 @@ func (t *Transmog) ParseXML(data []byte) error {
 	return t.Parse(j)
 }
 
+func addProperty(node map[string]interface{}, property string, value string) error {
+	node[property] = value
+	return nil
+}
+
 // Traverse the in memory object to the path.  If write is true update the node with value.
 func traverse(data interface{}, path []string, value *string, write bool) error {
 	// No path, don't know what property we are working with.
@@ -55,40 +60,46 @@ func traverse(data interface{}, path []string, value *string, write bool) error 
 	node = data.(map[string]interface{})
 	// Only one element in the path, get or set the value of the node.
 	if len(path) == 1 {
-		switch node[path[0]].(type) {
-		case string:
-			if write {
-				node[path[0]] = *value
-			} else {
-				*value = node[path[0]].(string)
-			}
-			return nil
-		case float64:
-			if write {
-				f, err := strconv.ParseFloat(*value, 64)
-				if err != nil {
-					return fmt.Errorf("Value type is not a number (%s): %v", *value, err.Error())
+		if _, found := node[path[0]]; found {
+			switch node[path[0]].(type) {
+			case string:
+				if write {
+					node[path[0]] = *value
+				} else {
+					*value = node[path[0]].(string)
 				}
-				node[path[0]] = f
-			} else {
-				*value = strconv.FormatFloat(node[path[0]].(float64), 'f', -1, 64)
-			}
-			return nil
-		case bool:
-			if write {
-				b, err := strconv.ParseBool(*value)
-				if err != nil {
-					return fmt.Errorf("Value type is not a bool (%s): %v", *value, err.Error())
+				return nil
+			case float64:
+				if write {
+					f, err := strconv.ParseFloat(*value, 64)
+					if err != nil {
+						return fmt.Errorf("Value type is not a number (%s): %v", *value, err.Error())
+					}
+					node[path[0]] = f
+				} else {
+					*value = strconv.FormatFloat(node[path[0]].(float64), 'f', -1, 64)
 				}
-				node[path[0]] = b
-			} else {
-				*value = strconv.FormatBool(node[path[0]].(bool))
+				return nil
+			case bool:
+				if write {
+					b, err := strconv.ParseBool(*value)
+					if err != nil {
+						return fmt.Errorf("Value type is not a bool (%s): %v", *value, err.Error())
+					}
+					node[path[0]] = b
+				} else {
+					*value = strconv.FormatBool(node[path[0]].(bool))
+				}
+				return nil
+			default:
+				valueType := strings.Replace(reflect.ValueOf(node[path[0]]).Kind().String(), "map", "object", -1)
+				valueType = strings.Replace(valueType, "slice", "array", -1)
+				return fmt.Errorf("value is %s", valueType)
 			}
+		} else {
+			// node[path[0]] = *value
+			addProperty(node, path[0], *value)
 			return nil
-		default:
-			valueType := strings.Replace(reflect.ValueOf(node[path[0]]).Kind().String(), "map", "object", -1)
-			valueType = strings.Replace(valueType, "slice", "array", -1)
-			return fmt.Errorf("value is %s", valueType)
 		}
 	} else {
 		// Traverse

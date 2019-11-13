@@ -46,6 +46,14 @@ func TestSetBool(t *testing.T) {
 	}
 }
 
+func TestAddProperty(t *testing.T) {
+	tm.Set([]string{"k9"}, "Lassie")
+	v, _ := tm.Get([]string{"k9"})
+	if v != "Lassie" {
+		t.Error("k9 is not Lassie")
+	}
+}
+
 func TestGetXml(t *testing.T) {
 	var tmog Transmog
 	err := tmog.LoadFile("test.xml")
